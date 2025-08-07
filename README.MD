@@ -31,3 +31,43 @@ This project demonstrates a minimal Model Context Protocol (MCP) server implemen
 - `Dockerfile` — Containerization instructions
 - `test_server.py` — (Optional) Tests for the server
 - `uv.lock` — Dependency lock file
+
+### How to share it outside localhost
+
+Use [devtunnel](https://learn.microsoft.com/en-us/azure/developer/dev-tunnels/get-started?tabs=windows#install) tool and these commands
+
+```powershell
+devtunnel user login
+devtunnel create test-mcp -a --host-header unchanged
+devtunnel port create test-mcp -p 8080
+devtunnel host test-mcp
+```
+
+This tunnel will give you a public url that you may use in copilot connector as host
+
+### IMPORTANT:
+
+* **MS Copilot MCP - Custom Connector definition**: For some reason, in the copilot studio connector definition, you must put `/mcp/` (notice the final slash). This is the :
+
+```yaml
+swagger: '2.0'
+info:
+  title: GCP-MCP
+  description: ''
+  version: '1.0'
+host: 9jx97sr1-5000.uks1.devtunnels.ms
+basePath: /
+schemes:
+  - https
+paths:
+  /mcp/:
+    post:
+      summary: Andoni test GCP Cloud Run
+      x-ms-agentic-protocol: mcp-streamable-1.0
+      operationId: InvokeMCP
+      responses:
+        '200':
+          description: Success
+securityDefinitions: {}
+```
+
