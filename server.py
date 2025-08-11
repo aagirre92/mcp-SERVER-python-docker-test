@@ -8,6 +8,8 @@ from fastmcp import FastMCP
 logger = logging.getLogger(__name__)
 logging.basicConfig(format="[%(levelname)s]: %(message)s", level=logging.INFO)
 
+
+
 mcp = FastMCP("MCP Server on Cloud Run")
 
 class Coordinates(BaseModel):

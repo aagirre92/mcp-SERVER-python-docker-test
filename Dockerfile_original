@@ -10,7 +10,6 @@ WORKDIR /app
 
 # Allow statements and log messages to immediately appear in the logs
 ENV PYTHONUNBUFFERED=1
-#ENV PORT=8000
 
 # Install dependencies
 RUN uv sync
@@ -18,4 +17,4 @@ RUN uv sync
 EXPOSE $PORT
 
 # Run the FastMCP server
-CMD ["uv", "run", "mcp-server-oauth-gcp-cloudRun.py"]
+CMD ["uv", "run", "server.py"]

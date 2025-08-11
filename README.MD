@@ -1,68 +1,42 @@
-## MCP Python Docker Test
+# MCP Python Docker Test
 
-This project demonstrates a minimal Model Context Protocol (MCP) server implemented in Python, designed to run inside a Docker container. It provides a set of simple mathematical tools (add, subtract, multiply, divide, and distance calculations) that can be exposed to LLM agents and Copilot Studio for programmatic use.
+This project demonstrates a minimal Model Context Protocol (MCP) server in Python, designed to run inside a Docker container and expose simple mathematical tools for use with LLM agents and Microsoft Copilot Studio.
 
-### Project Intent
-- **Showcase** how to build and expose Python functions as MCP tools for agent frameworks.
-- **Test** compatibility with Copilot Studio and similar LLM agent platforms.
-- **Demonstrate** the difference in tool visibility when using simple types vs. Pydantic models as function arguments.
+## Main Script
 
-### Key Features
-- Implements basic math operations as MCP tools.
-- Includes two distance calculation tools:
-  - `coordinates_distance`: Uses a Pydantic model (not visible to Copilot Studio agents).
-  - `coordinates_distance_simple_types`: Uses only primitive types (visible to Copilot Studio agents).
-- Ready to run in Docker or locally.
+**`mcp-server-oauth-gcp-cloudRun.py`** is the main entry point.  
+It starts an MCP server with OAuth2 authentication using Google Cloud credentials. The script:
+- Verifies Google OAuth2 access tokens and restricts access to allowed emails.
+- Exposes math tools (`add`, `subtract`, `multiply`, `divide`, and distance calculations) as MCP tools.
+- Supports both primitive-type and Pydantic model arguments (**⚠️: only primitive-type tools are visible to Copilot Studio agents. Those tools that have non-primitive types as input are not shown in Copilot Studio Agents**).
 
-### Tool Visibility Limitation
-> **Note:** MCP tools that use Pydantic models as arguments (e.g., `coordinates_distance`) are **not supported by Microsoft Copilot Studio** and will not appear in the agent toolset. Use only primitive types for maximum compatibility.
+## Quick Start
 
-### Usage
-
-**Good old Docker:**
-   ```sh
-   docker build -t mcp-python-docker-test .
-   docker run -p 8080:8080 mcp-python-docker-test
-   ```
-
-### File Overview
-- `server.py` — Main MCP server and tool definitions
-- `pyproject.toml` — Project metadata and dependencies
-- `Dockerfile` — Containerization instructions
-- `test_server.py` — (Optional) Tests for the server
-- `uv.lock` — Dependency lock file
-
-### How to share it outside localhost
-
-Use [devtunnel](https://learn.microsoft.com/en-us/azure/developer/dev-tunnels/get-started?tabs=windows#install) tool and these commands
-
-```powershell
-devtunnel user login
-devtunnel create test-mcp -a --host-header unchanged
-devtunnel port create test-mcp -p 8080
-devtunnel host test-mcp
+**Build and run with Docker:**
+```sh
+docker build -t mcp-python-docker-test .
+docker run -p 8080:8080 mcp-python-docker-test
 ```
 
-This tunnel will give you a public url that you may use in copilot connector as host
+## Copilot Studio Integration
 
-### IMPORTANT:
+- Use a public URL (e.g., via [devtunnel](https://learn.microsoft.com/en-us/azure/developer/dev-tunnels/get-started?tabs=windows#install)) as the host.
+- In the Copilot Studio connector definition, set the path to `/mcp/` (with the trailing slash). **⚠️ When using FastMCP with `from fastmcp import FastMCP` I had to put the final slash, but when using it with from mcp.server.fastmcp import FastMCP I did not put! This is very important**
 
-* **MS Copilot MCP - Custom Connector definition**: For some reason, in the copilot studio connector definition, you must put `/mcp/` (notice the final slash). This is the :
-
+**Example Swagger:**
 ```yaml
 swagger: '2.0'
 info:
   title: GCP-MCP
-  description: ''
   version: '1.0'
-host: 9jx97sr1-5000.uks1.devtunnels.ms
+host: <your-public-url>
 basePath: /
 schemes:
   - https
 paths:
   /mcp/:
     post:
-      summary: Andoni test GCP Cloud Run
+      summary: MCP endpoint
       x-ms-agentic-protocol: mcp-streamable-1.0
       operationId: InvokeMCP
       responses:
@@ -71,3 +45,9 @@ paths:
 securityDefinitions: {}
 ```
 
+## Files
+
+- `mcp-server-oauth-gcp-cloudRun.py` — Main MCP server with Google OAuth2
+- `Dockerfile` — Containerization instructions
+- `pyproject.toml` — Project dependencies
+- `server.py` — (Alternative) MCP server without
