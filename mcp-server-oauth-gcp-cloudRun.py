@@ -139,6 +139,11 @@ def divide(a: int, b: int) -> float:
     return a / b
 
 @mcp.tool()
+def build_coordinates(x1:int, y1:int) -> Coordinates:
+    """Build a Coordinates object from x and y values."""
+    return Coordinates(x=x1, y=y1)
+
+@mcp.tool()
 def coordinates_distance(coord1: Coordinates, coord2: Coordinates) -> float:
     """Calculate the distance between two points in 2D space. THIS TOOL IS NOT VISIBLE FOR COPILOT STUDIO AGENTS,
       AS IT USES A Pydantic MODEL.
@@ -169,6 +174,7 @@ def coordinates_distance_simple_types(x1: float, y1: float, x2: float, y2: float
     """
     logger.info(f">>> Tool: 'coordinates_distance' called with coordinates ({x1}, {y1}) and ({x2}, {y2})")
     return ((x1 - x2) ** 2 + (y1 - y2) ** 2) ** 0.5
+
 
 if __name__ == "__main__":
     mcp.run(transport="streamable-http")
