@@ -2,6 +2,9 @@
 
 This project demonstrates a minimal Model Context Protocol (MCP) server in Python, designed to run inside a Docker container and expose simple mathematical tools for use with LLM agents and Microsoft Copilot Studio.
 
+## GCP Cloud Run
+This repository is connected to GCP Cloud run `mcp-server`
+
 ## Main Script
 
 **`mcp-server-oauth-gcp-cloudRun.py`** is the main entry point.  
