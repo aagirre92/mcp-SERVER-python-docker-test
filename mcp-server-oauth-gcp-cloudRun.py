@@ -4,13 +4,15 @@ Run from the repository root:
 """
 import os
 import logging
+import token
 from pydantic import AnyHttpUrl,BaseModel, Field
 import requests
 from dotenv import load_dotenv
 from mcp.server.auth.provider import AccessToken, TokenVerifier
 from mcp.server.auth.settings import AuthSettings
 from mcp.server.fastmcp import FastMCP
-# from fastmcp import FastMCP  # Ensure you have the correct import for FastMCP
+from fastmcp.server.dependencies import get_http_request #https://gofastmcp.com/servers/context#http-requests
+from fastmcp.server.dependencies import get_access_token #https://gofastmcp.com/servers/context#access-tokens
 # Load environment variables from .env file
 load_dotenv()
 
@@ -91,6 +93,20 @@ def add(a: int, b: int) -> int:
     Returns:
         The sum of the two numbers.
     """
+    request = get_http_request()
+    if request:
+
+        token_http = request.headers.get("Authorization", "").split("Bearer ")[-1]
+        token_get_access_token: AccessToken | None = get_access_token()
+
+        # Method 1: Using get_http_request()
+        if token_http is not None:
+            logger.info(f"Access token (using get_http_request()): {token_http} \n")
+
+        # Method 2: Using get_access_token()
+        if token_get_access_token is not None:
+            logger.info(f"Access token using get_access_token(): {token_get_access_token.token}") # Esto fallará si no hay token
+
     logger.info(f">>> Tool: 'add' called with numbers '{a}' and '{b}'")
     return a + b
 
