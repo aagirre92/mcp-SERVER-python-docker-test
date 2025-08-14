@@ -11,7 +11,7 @@ This repository is connected to GCP Cloud run `mcp-server`
 It starts an MCP server with OAuth2 authentication using Google Cloud credentials. The script:
 - Verifies Google OAuth2 access tokens and restricts access to allowed emails.
 - Exposes math tools (`add`, `subtract`, `multiply`, `divide`, and distance calculations) as MCP tools.
-- Supports both primitive-type and Pydantic model arguments (**⚠️: only primitive-type tools are visible to Copilot Studio agents. Those tools that have non-primitive types as input are not shown in Copilot Studio Agents**).
+- Supports both primitive-type and Pydantic model arguments (**⚠️: only primitive-type tools are visible to Copilot Studio agents. Those tools that have non-primitive types as INPUT are not shown in Copilot Studio Agents**).
 
 ## Quick Start
 

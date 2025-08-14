@@ -4,15 +4,17 @@ Run from the repository root:
 """
 import os
 import logging
-import token
 from pydantic import AnyHttpUrl,BaseModel, Field
 import requests
 from dotenv import load_dotenv
 from mcp.server.auth.provider import AccessToken, TokenVerifier
 from mcp.server.auth.settings import AuthSettings
 from mcp.server.fastmcp import FastMCP
+
 from fastmcp.server.dependencies import get_http_request #https://gofastmcp.com/servers/context#http-requests
 from fastmcp.server.dependencies import get_access_token #https://gofastmcp.com/servers/context#access-tokens
+
+
 # Load environment variables from .env file
 load_dotenv()
 
